@@ -58,9 +58,37 @@ console.log('dailyTemperatures test passed')
 
 /**
  * 直⽅图最⼤矩形⾯积
+ * 枚举每一个柱子的高 找到左右两边不低于该高度
  * lc84
  * @param heights
  */
 const largestRectangleArea = (heights: number[]) => {
-    
+    const left: number[] = [], right: number[] = []
+    const l = Array.from({length: heights.length}, (v, k) =>  0)
+    const r = Array.from({length: heights.length}, (v, k) => heights.length - 1)
+    for (let i = 0; i < heights.length; i++) {
+        while (left.length && heights[i] <= heights[left[left.length - 1]]) {
+            l[i] = left.pop() as number
+        }
+        if (left.length) {
+            l[i] = left[left.length - 1]
+        }
+        left.push(i)
+    }
+
+    for (let i = heights.length - 1; i >= 0; i--) {
+        while (right.length && heights[i] <= heights[right[right.length - 1]]) {
+            r[i] = right.pop() as number
+        }
+        if (right.length) {
+            r[i] = right[right.length - 1]
+        }
+        right.push(i)
+    }
+    console.log(l, r)
 }
+
+
+// 2 1 5 6 2 3
+
+largestRectangleArea([2,1,5,6,2,3])
