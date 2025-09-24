@@ -53,42 +53,87 @@ assert.deepEqual(dailyTemperatures1([73,74,75,71,69,72,76,73]),[1,1,4,2,1,1,0,0]
 assert.deepEqual(dailyTemperatures1([30,40,50,60]),[1,1,1,0],'wrong')
 assert.deepEqual(dailyTemperatures1([30,60,90]),[1,1,0],'wrong')
 assert.deepEqual(dailyTemperatures1([89,62,70,58,47,47,46,76,100,70]),[8,1,5,4,3,2,1,1,0,0],'wrong')
-console.log('dailyTemperatures test passed')
 
 
 /**
  * 直⽅图最⼤矩形⾯积
- * 枚举每一个柱子的高 找到左右两边不低于该高度
  * lc84
+ * 单调栈：枚举每一个柱子作为矩形的高 需要找到左右边界 边界的柱子是第一个小于该高度
+ * 既找到左右两边第一个小于该高度的柱子
+ * 分治：最大面积分为三部分
+ * 1、最小高度 * heights.length 
+ * 2、不包含最小高度
+ *     2.1： 最小高度左边
+ *     2.2： 最小高度右边
  * @param heights
  */
 const largestRectangleArea = (heights: number[]) => {
     const left: number[] = [], right: number[] = []
-    const l = Array.from({length: heights.length}, (v, k) =>  0)
-    const r = Array.from({length: heights.length}, (v, k) => heights.length - 1)
+    const l = Array<number>(heights.length).fill(-1)
+    const r = Array<number>(heights.length).fill(heights.length)
     for (let i = 0; i < heights.length; i++) {
         while (left.length && heights[i] <= heights[left[left.length - 1]]) {
-            l[i] = left.pop() as number
+            left.pop()
         }
         if (left.length) {
             l[i] = left[left.length - 1]
         }
         left.push(i)
     }
-
     for (let i = heights.length - 1; i >= 0; i--) {
         while (right.length && heights[i] <= heights[right[right.length - 1]]) {
-            r[i] = right.pop() as number
+            right.pop()
         }
         if (right.length) {
             r[i] = right[right.length - 1]
         }
         right.push(i)
     }
-    console.log(l, r)
+    let res = 0
+    for (let i = 0; i < heights.length; i++) {
+        res = Math.max(res, (r[i] - l[i] - 1) * heights[i])
+    }
+    return res
 }
 
 
-// 2 1 5 6 2 3
+/**
+ * @param heights
+ */
+const largestRectangleArea1 = (heights: number[]) => {
+    const left: number[] = [], right: number[] = []
+    const l = Array<number>(heights.length).fill(-1)
+    const r = Array<number>(heights.length).fill(heights.length)
+    for (let i = 0; i < heights.length; i++) {
+        while (left.length && heights[i] <= heights[left[left.length - 1]]) {
+            // 参考每日温度正向遍历
+            r[left.pop() as number] = i
+        }
+        if (left.length) {
+            l[i] = left[left.length - 1]
+        }
+        left.push(i)
+    }
+    let res = 0
+    for (let i = 0; i < heights.length; i++) {
+        res = Math.max(res, (r[i] - l[i] - 1) * heights[i])
+    }
+    return res
+}
 
-largestRectangleArea([2,1,5,6,2,3])
+
+assert.equal(largestRectangleArea([3, 2, 5, 4, 6, 1, 4, 2]), 12, 'fail')
+assert.equal(largestRectangleArea1([3, 2, 5, 4, 6, 1, 4, 2]), 12, 'fail')
+assert.equal(largestRectangleArea([2, 1, 5, 6, 2, 3]), 10, 'fail')
+assert.equal(largestRectangleArea1([2, 1, 5, 6, 2, 3]), 10, 'fail')
+
+
+/**
+ * 矩形中最大矩形面积
+ * lc85
+ * 给定一个仅包含 0 和 1 、大小为 n x m 的二维二进制矩阵，找出只包含 1 的最大矩形，并返回其面积。
+ * 可以将矩阵转换为n个m长度的直方图，然后统计直方图中最大矩形面积
+ */
+const maximalRectangle = (matrix: number[][]) => {
+
+};
