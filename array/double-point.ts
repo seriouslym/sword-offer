@@ -2,6 +2,8 @@
  * 双指针等相关问题
  */
 
+import assert from "node:assert";
+
 /**
  * 有序数组 找到两个数的和为target 返回下标数组[i1,i2]
  * @param nums
@@ -109,6 +111,12 @@ console.log(shortestSubarray([-1, 2, 2], 3));
 
 
 /**
+ * 滑动窗口
+ * 收缩更新：用于“找最优解”，窗口满足条件后立即尝试优化。
+ * 扩张更新：用于“统计总数”，利用窗口性质直接累加新增的子数组
+ */
+
+/**
  * 乘积小于k的子数组
  * 输⼊⼀个由正整数组成的数组和⼀个正整数k，请问数组
  * 中有多少个数字乘积⼩于k的连续⼦数组？例如，输⼊数组[10，5，2，6]，k的值为100，有8个⼦数组的所有数字的乘积⼩于100，它们
@@ -130,3 +138,4 @@ const numSubarrayProductLessThanK = (nums: number[], k: number) => {
 }
 
 console.log(numSubarrayProductLessThanK([10, 5, 2, 6], 100))
+
